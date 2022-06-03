@@ -14,8 +14,5 @@ export class CreateGoalDto {
     current_value: number
 
     @IsNotEmpty()
-    is_shared: boolean
-
-    @CreateDateColumn()
-    created_at: Date
+    share_id: string
 }
