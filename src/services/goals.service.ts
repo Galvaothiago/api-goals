@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CreateGoalDto } from 'src/entities/goals/dto/create-goal.dto';
+import { UpdateGoalDto } from 'src/entities/goals/dto/update-goal.dto';
+import { Goal } from 'src/entities/goals/goal.entity';
 import { Repository } from 'typeorm';
-import { CreateGoalDto } from './dto/create-goal.dto';
-import { UpdateGoalDto } from './dto/update-goal.dto';
-import { Goal } from './entities/goal.entity';
+
 
 @Injectable()
 export class GoalsService {
