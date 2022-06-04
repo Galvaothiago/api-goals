@@ -1,5 +1,4 @@
-import { IsInt, IsNotEmpty, IsNumberString } from "class-validator"
-import { CreateDateColumn, PrimaryGeneratedColumn } from "typeorm"
+import { IsNotEmpty, IsNumber, IsPositive } from "class-validator"
 
 export class CreateGoalDto {
     @IsNotEmpty()
@@ -7,10 +6,12 @@ export class CreateGoalDto {
 
     url_img: string
 
-    @IsInt()
+    @IsNumber()
+    @IsPositive()
     final_value: number
 
-    @IsInt()
+    @IsNumber()
+    @IsPositive()
     current_value: number
 
     @IsNotEmpty()
