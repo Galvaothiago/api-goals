@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateGoalDto } from 'src/entities/goals/dto/create-goal.dto';
 import { UpdateGoalDto } from 'src/entities/goals/dto/update-goal.dto';
 import { Goal } from 'src/entities/goals/goal.entity';
+import { generatePassword } from 'src/utils/generatePassword';
 import { Repository } from 'typeorm';
 
 
@@ -12,23 +13,51 @@ export class GoalsService {
     @InjectRepository(Goal)
     private readonly goalRepository: Repository<Goal>
     ){}
-  create(createGoalDto: CreateGoalDto) {
-    return this.goalRepository.save(createGoalDto);
+  async create(createGoalDto: CreateGoalDto) {
+    return await this.goalRepository.save(createGoalDto);
   }
 
-  findAll() {
-    return this.goalRepository.find();
+  async findAll() {
+    return await this.goalRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} goal`;
+  async findOne(id: string) {
+    const goal = await this.goalRepository.findOneBy({id});
+
+    const messageNotFound = {
+      status: 404,
+      message: "Goals not found!"
+    }
+
+    if(!goal) {
+      return messageNotFound
+    }
+    return this.goalRepository.findOneBy({ id })
   }
 
-  update(id: number, updateGoalDto: UpdateGoalDto) {
-    return `This action updates a #${id} goal`;
+  async update(id: string, updateGoalDto: UpdateGoalDto) {
+    return await this.goalRepository.update(id, updateGoalDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} goal`;
+  async remove(id: string) {
+    return await this.goalRepository.delete(id);
   }
+
+  async changeStatusShared(id: string) {
+    const goalToUpdate = await this.goalRepository.findOneBy({ id })
+    const { is_shared } = goalToUpdate 
+
+    if(!is_shared) {
+      return await this.goalRepository.update(id, { 
+        is_shared: !is_shared,
+        share_id: generatePassword()
+      })
+    }
+
+    return await this.goalRepository.update(id, { 
+      is_shared: !is_shared,
+      share_id: null
+    })
+  }
+
 }
