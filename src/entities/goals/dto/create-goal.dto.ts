@@ -1,19 +1,22 @@
-import { IsNotEmpty, IsNumber, IsPositive } from "class-validator"
+import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator';
 
 export class CreateGoalDto {
-    @IsNotEmpty()
-    title: string
+  @IsNotEmpty()
+  user_id: string;
 
-    url_img: string
+  @IsNotEmpty()
+  title: string;
 
-    @IsNumber()
-    @IsPositive()
-    final_value: number
+  url_img: string;
 
-    @IsNumber()
-    @IsPositive()
-    current_value: number
+  @IsNumber()
+  @IsPositive()
+  final_value: number;
 
-    @IsNotEmpty()
-    share_id: string
+  @IsNumber()
+  @IsPositive()
+  current_value: number;
+
+  @IsNotEmpty()
+  share_id: string;
 }

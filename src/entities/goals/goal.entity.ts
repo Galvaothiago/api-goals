@@ -1,29 +1,36 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'goals' })
 export class Goal {
-    @PrimaryGeneratedColumn("uuid")
-    id: string 
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    title: string
+  @Column()
+  user_id: string;
 
-    @Column()
-    url_img: string
+  @Column()
+  title: string;
 
-    @Column()
-    final_value: number
+  @Column()
+  url_img: string;
 
-    @Column()
-    current_value: number
+  @Column()
+  final_value: number;
 
-    @Column({ default: false })
-    is_shared: boolean
+  @Column()
+  current_value: number;
 
-    @Column({ default: null })
-    share_id: string
+  @Column({ default: false })
+  is_shared: boolean;
 
-    @CreateDateColumn()
-    created_at: Date
+  @Column({ default: null })
+  share_id: string;
 
+  @CreateDateColumn()
+  created_at: Date;
 }
