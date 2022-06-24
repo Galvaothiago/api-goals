@@ -2,6 +2,8 @@ import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
 import { IsPasswordValid } from "src/decorators/password.validator";
 
 export class CreateUserDto {
+    id?: string
+    
     @IsNotEmpty()
     @MinLength(4)
     @MaxLength(25)
