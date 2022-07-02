@@ -5,12 +5,10 @@ import {
   HttpCode,
   Param,
   Post,
-  Req,
   Request,
   UseGuards,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
+import { IsPublic } from 'src/decorators/endpoint-public.decorator';
 import { CreateUserDto } from 'src/entities/user/dto/create-user.dto';
 import { User } from 'src/entities/user/user.entity';
 import { UserService } from 'src/services/user.service';
@@ -40,6 +38,7 @@ export class AuthController {
     }
   }
 
+  @IsPublic()
   @Post('signin')
   @HttpCode(200)
   @UseGuards(LocalAuthGuard)

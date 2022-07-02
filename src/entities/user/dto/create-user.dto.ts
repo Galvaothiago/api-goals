@@ -1,31 +1,30 @@
-import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
-import { IsPasswordValid } from "src/decorators/password.validator";
+import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { IsPasswordValid } from 'src/decorators/password-validator.decorator';
 
 export class CreateUserDto {
-    id?: string
-    
-    @IsNotEmpty()
-    @MinLength(4)
-    @MaxLength(25)
-    username: string
+  id?: string;
 
-    @IsNotEmpty()
-    @MaxLength(30)
-    firstName: string
+  @IsNotEmpty()
+  @MinLength(4)
+  @MaxLength(25)
+  username: string;
 
-    @IsNotEmpty()
-    @MaxLength(30)
-    lastName: string
+  @IsNotEmpty()
+  @MaxLength(30)
+  firstName: string;
 
-    @IsEmail()
-    @IsNotEmpty()
-    email: string
+  @IsNotEmpty()
+  @MaxLength(30)
+  lastName: string;
 
-    @IsNotEmpty()
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 
-    @IsNotEmpty()
-    @MinLength(6)
-    @MaxLength(100)
-    @IsPasswordValid()
-    password: string
+  @IsNotEmpty()
+  @IsNotEmpty()
+  @MinLength(6)
+  @MaxLength(100)
+  @IsPasswordValid()
+  password: string;
 }

@@ -4,15 +4,17 @@ import { UserService } from 'src/services/user.service';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/entities/user/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import { UnauthorizedException } from 'src/exceptions/unauthorized.exception';
+import { UnauthorizedError } from 'src/exceptions/unauthorized.exception';
 
 interface PayloadProp {
   sub: string;
   username: string;
+  name: string;
 }
 
 export interface LoginResponse {
   accessToken: string;
+  id: string;
   username: string;
   name: string;
 }
@@ -40,18 +42,20 @@ export class AuthService {
       }
     }
 
-    throw new UnauthorizedException('Username or password is incorrect');
+    throw new UnauthorizedError();
   }
 
   login(user: User): LoginResponse {
     const payload: PayloadProp = {
-      sub: user.username,
+      sub: user.id,
       username: user.username,
+      name: `${user.firstName} ${user.lastName}`,
     };
 
     const jwt = this.jwtService.sign(payload);
 
     return {
+      id: user.id,
       accessToken: jwt,
       username: user.username,
       name: `${user.firstName} ${user.lastName}`,
