@@ -12,7 +12,6 @@ export class GoalsController {
   @Post()
   @UsePipes(ValidationPipe)
   create(@Body() createGoalDto: CreateGoalDto) {
-    console.log()
     return this.goalsService.create(createGoalDto);
   }
 
