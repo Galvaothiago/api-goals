@@ -21,7 +21,6 @@ interface RequestAuth extends Request {
   user: User;
 }
 
-@UsePipes(ValidationPipe)
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -29,7 +28,7 @@ export class AuthController {
     private readonly userService: UserService,
   ) {}
 
-  @Post('signin')
+  @Post('signup')
   createUser(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -41,7 +40,7 @@ export class AuthController {
     }
   }
 
-  @Post('signup')
+  @Post('signin')
   @HttpCode(200)
   @UseGuards(LocalAuthGuard)
   login(@Request() request: RequestAuth) {
