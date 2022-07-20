@@ -6,6 +6,7 @@ import { UserModule } from './modules/user.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guards';
+import { SharedModule } from './modules/shared-goals.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guards';
     GoalsModule,
     UserModule,
     AuthModule,
+    SharedModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],

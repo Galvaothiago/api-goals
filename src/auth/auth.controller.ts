@@ -15,7 +15,7 @@ import { UserService } from 'src/services/user.service';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guards';
 
-interface RequestAuth extends Request {
+interface AuthRequest extends Request {
   user: User;
 }
 
@@ -31,8 +31,12 @@ export class AuthController {
     return this.userService.create(createUserDto);
   }
 
+  @IsPublic()
   @Get('/:username')
   verfifyUsername(@Param('username') username: string) {
+    const code = this.userService.createCodeInvite(8);
+
+    console.log(code);
     if (!!username) {
       return this.userService.usernameAlreadyExists(username);
     }
@@ -42,7 +46,7 @@ export class AuthController {
   @Post('signin')
   @HttpCode(200)
   @UseGuards(LocalAuthGuard)
-  login(@Request() request: RequestAuth) {
+  login(@Request() request: AuthRequest) {
     return this.authService.login(request.user);
   }
 }

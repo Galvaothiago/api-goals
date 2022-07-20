@@ -1,23 +1,28 @@
-import { MaxLength, MinLength } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { MaxLength, MinLength } from 'class-validator';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
-@Entity('sharing_goal')
+@Entity({ name: 'sharing_goal' })
 export class Sharing {
-    @PrimaryGeneratedColumn()
-    id: string
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    goal_shared: string
+  @Column()
+  goal_shared: string;
 
-    @Column()
-    username_from: string
+  @Column()
+  username_from: string;
 
-    @Column()
-    username_to: string
+  @Column()
+  username_to: string;
 
-    @Column({ default: false})
-    sharing_verify: boolean
+  @Column({ default: false })
+  sharing_verify: boolean;
 
-    @Column()
-    verified_at: Date
+  @CreateDateColumn()
+  verified_at: Date;
 }
