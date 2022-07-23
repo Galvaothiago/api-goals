@@ -15,24 +15,24 @@ export class SharingService {
     private readonly sharingRepository: Repository<Sharing>,
   ) {}
 
-  async getSharingByUsername(username: string) {
+  async getSharingReceiveByUsername(username: string) {
     const goalsShared = await this.sharingRepository.findBy({
       username_to: username,
     });
 
-    if (!goalsShared) {
+    if (goalsShared.length === 0) {
       throw new GoalsSharedEmpty();
     }
 
     return goalsShared;
   }
 
-  async getSharingReceiveByUsername(username: string) {
+  async getSharingIssuedByUsername(username: string) {
     const goalsShared = await this.sharingRepository.findBy({
       username_from: username,
     });
 
-    if (!goalsShared) {
+    if (goalsShared.length === 0) {
       throw new GoalsSharedEmpty();
     }
 
@@ -46,10 +46,39 @@ export class SharingService {
     if (usernameTo === usernameFrom) {
       throw new SharingException('Not allowed to share a goal with yourself');
     }
-    const userModify = {
+    const userModified = {
       ...sharingDto,
       username_from: user.username,
     };
-    return await this.sharingRepository.save(userModify);
+    return await this.sharingRepository.save(userModified);
+  }
+
+  async checkSharedGoal(id: string) {
+    if (!id) {
+      throw new SharingException('id needed to check it!');
+    }
+
+    const goalShared = await this.sharingRepository.findBy({ id });
+
+    if (goalShared.length === 0) {
+      throw new SharingException('Goal shared not found!');
+    }
+
+    const goalSharedUpdated = {
+      ...goalShared[0],
+      sharing_verify: true,
+    };
+
+    await this.sharingRepository.update(id, goalSharedUpdated);
+  }
+
+  async deleteGoalShared(id: string) {
+    const goalShared = await this.sharingRepository.findBy({ id });
+
+    if (goalShared.length === 0) {
+      throw new SharingException('Goal shared not found!');
+    }
+
+    await this.sharingRepository.delete(id);
   }
 }
