@@ -13,4 +13,5 @@ export class CreateSharingDto {
   username_to: string;
 
   sharing_verify: boolean;
+  rejected: boolean;
 }

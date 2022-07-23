@@ -23,6 +23,9 @@ export class Sharing {
   @Column({ default: false })
   sharing_verify: boolean;
 
-  @CreateDateColumn()
+  @Column({ default: false })
+  rejected: boolean;
+
+  @Column({ default: null })
   verified_at: Date;
 }

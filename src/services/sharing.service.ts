@@ -15,6 +15,20 @@ export class SharingService {
     private readonly sharingRepository: Repository<Sharing>,
   ) {}
 
+  async create(sharingDto: CreateSharingDto, user: User) {
+    const usernameTo = sharingDto.username_to;
+    const usernameFrom = user.username;
+
+    if (usernameTo === usernameFrom) {
+      throw new SharingException('Not allowed to share a goal with yourself');
+    }
+    const userModified = {
+      ...sharingDto,
+      username_from: user.username,
+    };
+    return await this.sharingRepository.save(userModified);
+  }
+
   async getSharingReceiveByUsername(username: string) {
     const goalsShared = await this.sharingRepository.findBy({
       username_to: username,
@@ -39,18 +53,20 @@ export class SharingService {
     return goalsShared;
   }
 
-  async create(sharingDto: CreateSharingDto, user: User) {
-    const usernameTo = sharingDto.username_to;
-    const usernameFrom = user.username;
+  async rejectGoal(id: string) {
+    const goalShared = await this.sharingRepository.findBy({ id });
 
-    if (usernameTo === usernameFrom) {
-      throw new SharingException('Not allowed to share a goal with yourself');
+    if (goalShared.length === 0) {
+      throw new SharingException('Goal shared not found!');
     }
-    const userModified = {
-      ...sharingDto,
-      username_from: user.username,
+
+    const goalSharedUpdated = {
+      ...goalShared[0],
+      rejectd: true,
+      verified_at: new Date(),
     };
-    return await this.sharingRepository.save(userModified);
+
+    await this.sharingRepository.update(id, goalSharedUpdated);
   }
 
   async checkSharedGoal(id: string) {
@@ -67,6 +83,7 @@ export class SharingService {
     const goalSharedUpdated = {
       ...goalShared[0],
       sharing_verify: true,
+      verified_at: new Date(),
     };
 
     await this.sharingRepository.update(id, goalSharedUpdated);
