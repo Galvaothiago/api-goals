@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateInviteDto } from 'src/entities/invite/dto/create-invite.dto';
 import { Invite } from 'src/entities/invite/invite.entity';
 import { InviteCodeError } from 'src/exceptions/invite-code.exception';
-import { InviteSignatureError } from 'src/exceptions/invite-signture.exception';
+import { InviteSignatureError } from 'src/exceptions/invite-signature.exception';
 import { InviteErrorException } from 'src/exceptions/invites-error.exception';
 import { NoInviteException } from 'src/exceptions/no-invites.exception';
 import { Repository } from 'typeorm';
