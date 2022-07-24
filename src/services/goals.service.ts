@@ -56,9 +56,11 @@ export class GoalsService {
 
     const { current_amount } = goalToUpdate;
 
+    const sum = current_amount + money;
+
     const goalUpadted = {
       ...goalToUpdate,
-      current_amount: Number((current_amount + money).toFixed(2)),
+      current_amount: Number(sum.toFixed(2)),
     };
 
     return await this.goalRepository.update(id, goalUpadted);
