@@ -54,11 +54,11 @@ export class GoalsService {
   async increaseCurrentValue(id: string, money: number) {
     const goalToUpdate = await this.goalRepository.findOneBy({ id });
 
-    const { current_value } = goalToUpdate;
+    const { current_amount } = goalToUpdate;
 
     const goalUpadted = {
       ...goalToUpdate,
-      current_value: Number((current_value + money).toFixed(2)),
+      current_amount: Number((current_amount + money).toFixed(2)),
     };
 
     return await this.goalRepository.update(id, goalUpadted);

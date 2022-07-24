@@ -20,10 +20,10 @@ export class Goal {
   url_img: string;
 
   @Column()
-  final_value: number;
+  final_amount: number;
 
   @Column()
-  current_value: number;
+  current_amount: number;
 
   @Column({ default: false })
   is_shared: boolean;

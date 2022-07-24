@@ -11,9 +11,9 @@ export class CreateGoalDto {
 
   @IsNumber()
   @IsPositive()
-  final_value: number;
+  final_amount: number;
 
   @IsNumber()
   @IsPositive()
-  current_value: number;
+  current_amount: number;
 }
