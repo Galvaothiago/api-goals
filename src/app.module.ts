@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guards';
 import { SharedModule } from './modules/shared-goals.module';
+import { InviteModule } from './modules/invite.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { SharedModule } from './modules/shared-goals.module';
     UserModule,
     AuthModule,
     SharedModule,
+    InviteModule,
     ConfigModule.forRoot({ isGlobal: true }),
   ],
   controllers: [],

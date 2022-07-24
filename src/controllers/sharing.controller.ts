@@ -1,24 +1,8 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UsePipes,
-  ValidationPipe,
-  HttpCode,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { CreateGoalDto } from 'src/entities/goals/dto/create-goal.dto';
-import { UpdateGoalDto } from 'src/entities/goals/dto/update-goal.dto';
 import { CreateSharingDto } from 'src/entities/sharing/dto/create-sharing.dto';
 import { User } from 'src/entities/user/user.entity';
 import { SharingService } from 'src/services/sharing.service';
-import { generatePassword } from 'src/utils/generatePassword';
-import { GoalsService } from '../services/goals.service';
 
 @Controller('sharing')
 export class SharingController {

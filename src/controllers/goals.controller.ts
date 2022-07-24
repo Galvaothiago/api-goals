@@ -1,30 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Put,
   UsePipes,
   ValidationPipe,
-  HttpCode,
-  Put,
 } from '@nestjs/common';
-import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { CreateGoalDto } from 'src/entities/goals/dto/create-goal.dto';
 import { UpdateGoalDto } from 'src/entities/goals/dto/update-goal.dto';
-import { User } from 'src/entities/user/user.entity';
 import { SharingService } from 'src/services/sharing.service';
-import { generatePassword } from 'src/utils/generatePassword';
 import { GoalsService } from '../services/goals.service';
 
 @Controller('goals')
 export class GoalsController {
-  constructor(
-    private readonly goalsService: GoalsService,
-    private readonly sharingService: SharingService,
-  ) {}
+  constructor(private readonly goalsService: GoalsService) {}
 
   @Post()
   @UsePipes(ValidationPipe)

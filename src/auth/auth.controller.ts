@@ -34,9 +34,6 @@ export class AuthController {
   @IsPublic()
   @Get('/:username')
   verfifyUsername(@Param('username') username: string) {
-    const code = this.userService.createCodeInvite(8);
-
-    console.log(code);
     if (!!username) {
       return this.userService.usernameAlreadyExists(username);
     }

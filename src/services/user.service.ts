@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 
 import * as bcrypt from 'bcrypt';
 import { UserExistsException } from 'src/exceptions/user-exists.exception';
+import { UserNotFoundException } from 'src/exceptions/user-not-found.exception';
 
 @Injectable()
 export class UserService {
@@ -52,48 +53,42 @@ export class UserService {
     };
   }
 
-  createCodeInvite(size: number) {
-    const caracters = '#abcdefghijklmnopqrstuvxzywABCDEFGHIJKLMNOPQRSTUVXZYW@';
-    const numbers = '1234567890';
-
-    let finalCode = '';
-    let halfCaracters = [];
-    let halfNumbers = [];
-
-    const random = (length: number) => {
-      return Math.round(Math.random() * (length - 1));
-    };
-
-    const createCodeWithSize = (size: number) => {
-      for (let i = 0; i < size; i++) {
-        if (i % 2 === 0) {
-          halfNumbers.push(numbers[random(numbers.length)]);
-        } else {
-          halfCaracters.push(caracters[random(caracters.length)]);
-        }
-      }
-
-      finalCode = `${halfCaracters.join('')}-${halfNumbers.join('')}`;
-    };
-
-    switch (size) {
-      case 6:
-        createCodeWithSize(size);
-        break;
-
-      case 8:
-        createCodeWithSize(size);
-        break;
-
-      default:
-        createCodeWithSize(6);
-        break;
-    }
-
-    return finalCode;
-  }
-
   async findByUsername(username: string) {
     return await this.userRepository.findBy({ username });
+  }
+
+  async canCreateInvite(username: string) {
+    const [user] = await this.findByUsername(username);
+
+    if (!user.id) {
+      throw new UserNotFoundException();
+    }
+
+    const remainingInvitations = user.invites;
+
+    if (remainingInvitations > 0) {
+      return true;
+    }
+
+    return false;
+  }
+
+  async decreaseInvite(username: string) {
+    const [user] = await this.findByUsername(username);
+
+    if (!user.id) {
+      throw new UserNotFoundException();
+    }
+
+    const remainingInvitations = user.invites;
+
+    if (remainingInvitations > 0) {
+      const userUpdate = {
+        ...user,
+        invites: remainingInvitations - 1,
+      };
+
+      await this.userRepository.update(user.id, userUpdate);
+    }
   }
 }
