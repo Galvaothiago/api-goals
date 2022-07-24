@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { CreateInviteDto } from 'src/entities/invite/dto/create-invite.dto';
 import { User } from 'src/entities/user/user.entity';
@@ -16,5 +16,13 @@ export class InviteController {
   @Get('/')
   getInfoIssuedInviteByUsername(@CurrentUser() user: User) {
     return this.inviteService.getInvitesInfoIssued(user.username);
+  }
+
+  @Get('/received/:code')
+  confirmInviteReceived(
+    @Param('code') code: string,
+    @CurrentUser() user: User,
+  ) {
+    return this.inviteService.signCodeReceived(user.username, code);
   }
 }

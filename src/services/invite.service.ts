@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateInviteDto } from 'src/entities/invite/dto/create-invite.dto';
 import { Invite } from 'src/entities/invite/invite.entity';
 import { InviteCodeError } from 'src/exceptions/invite-code.exception';
+import { InviteSignatureError } from 'src/exceptions/invite-signture.exception';
 import { InviteErrorException } from 'src/exceptions/invites-error.exception';
 import { NoInviteException } from 'src/exceptions/no-invites.exception';
 import { Repository } from 'typeorm';
@@ -90,23 +91,28 @@ export class InviteService {
     }
   }
 
-  async validateCodeInvite(code: string) {
+  async validateCodeInvite(code: string, username: string) {
     const inviteCode = await this.inviteRepository.findOneBy({
       invite_code: code,
     });
 
     if (!inviteCode) throw new InviteCodeError('Invalid code!');
+    if (inviteCode.issued_by === username)
+      throw new InviteSignatureError(
+        'Invalid signature, user who issued is the same user who is trying to sign',
+      );
 
     const codeAlreadyUsed = inviteCode.code_used;
     return codeAlreadyUsed ? false : true;
   }
 
   async signCodeReceived(username: string, code: string) {
-    const isCodeValid = await this.validateCodeInvite(code);
+    const isCodeValid = await this.validateCodeInvite(code, username);
 
     if (!isCodeValid) throw new InviteCodeError('Code has already been used!');
 
     const invite = await this.inviteRepository.findOneBy({ invite_code: code });
+
     const signCode = {
       ...invite,
       consumed_by: username,
