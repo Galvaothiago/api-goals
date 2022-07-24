@@ -16,8 +16,8 @@ export class GoalsService {
     return await this.goalRepository.save(createGoalDto);
   }
 
-  async findAll() {
-    return await this.goalRepository.find();
+  async findAll(userId: string) {
+    return await this.goalRepository.findBy({ user_id: userId });
   }
 
   async findOne(id: string) {
@@ -46,16 +46,21 @@ export class GoalsService {
     const goalToUpdate = await this.goalRepository.findOneBy({ id });
     const { is_shared } = goalToUpdate;
 
-    if (!is_shared) {
-      return await this.goalRepository.update(id, {
-        is_shared: !is_shared,
-        share_id: generateCodeInvite(),
-      });
-    }
-
-    return await this.goalRepository.update(id, {
+    await this.goalRepository.update(id, {
       is_shared: !is_shared,
-      share_id: null,
     });
+  }
+
+  async increaseCurrentValue(id: string, money: number) {
+    const goalToUpdate = await this.goalRepository.findOneBy({ id });
+
+    const { current_value } = goalToUpdate;
+
+    const goalUpadted = {
+      ...goalToUpdate,
+      current_value: Number((current_value + money).toFixed(2)),
+    };
+
+    return await this.goalRepository.update(id, goalUpadted);
   }
 }

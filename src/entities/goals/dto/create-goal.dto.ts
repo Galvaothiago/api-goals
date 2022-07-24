@@ -16,7 +16,4 @@ export class CreateGoalDto {
   @IsNumber()
   @IsPositive()
   current_value: number;
-
-  @IsNotEmpty()
-  share_id: string;
 }

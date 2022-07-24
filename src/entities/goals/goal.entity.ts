@@ -28,9 +28,6 @@ export class Goal {
   @Column({ default: false })
   is_shared: boolean;
 
-  @Column({ default: null })
-  share_id: string;
-
   @CreateDateColumn()
   created_at: Date;
 }
