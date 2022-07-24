@@ -9,7 +9,12 @@ export class InviteController {
   constructor(private readonly inviteService: InviteService) {}
 
   @Post('/')
-  getSharedGoalsIssued(@CurrentUser() user: User) {
+  createInvite(@CurrentUser() user: User) {
     return this.inviteService.saveCodeInvite(user.username);
+  }
+
+  @Get('/')
+  getInfoIssuedInviteByUsername(@CurrentUser() user: User) {
+    return this.inviteService.getInvitesInfoIssued(user.username);
   }
 }

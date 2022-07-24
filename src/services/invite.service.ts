@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateInviteDto } from 'src/entities/invite/dto/create-invite.dto';
 import { Invite } from 'src/entities/invite/invite.entity';
+import { InviteCodeError } from 'src/exceptions/invite-code.exception';
+import { InviteErrorException } from 'src/exceptions/invites-error.exception';
 import { NoInviteException } from 'src/exceptions/no-invites.exception';
 import { Repository } from 'typeorm';
-import { SharingService } from './sharing.service';
 import { UserService } from './user.service';
 
 @Injectable()
@@ -73,7 +74,46 @@ export class InviteService {
 
     await this.inviteRepository.save(signedInvite);
     await this.userService.decreaseInvite(username);
+
+    return signedInvite;
   }
 
-  getInvitesInfoIssued(username: string) {}
+  async getInvitesInfoIssued(username: string) {
+    try {
+      const createdInvites = await this.inviteRepository.findBy({
+        issued_by: username,
+      });
+
+      return createdInvites;
+    } catch (err) {
+      throw new InviteErrorException(err.message);
+    }
+  }
+
+  async validateCodeInvite(code: string) {
+    const inviteCode = await this.inviteRepository.findOneBy({
+      invite_code: code,
+    });
+
+    if (!inviteCode) throw new InviteCodeError('Invalid code!');
+
+    const codeAlreadyUsed = inviteCode.code_used;
+    return codeAlreadyUsed ? false : true;
+  }
+
+  async signCodeReceived(username: string, code: string) {
+    const isCodeValid = await this.validateCodeInvite(code);
+
+    if (!isCodeValid) throw new InviteCodeError('Code has already been used!');
+
+    const invite = await this.inviteRepository.findOneBy({ invite_code: code });
+    const signCode = {
+      ...invite,
+      consumed_by: username,
+      checked_at: new Date(),
+      code_used: true,
+    };
+
+    return await this.inviteRepository.update(invite.id, signCode);
+  }
 }
